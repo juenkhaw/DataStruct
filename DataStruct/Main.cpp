@@ -1,6 +1,8 @@
 #include <iostream>
 #include <string>
 #include <functional>
+#include <algorithm>
+#include <time.h>
 
 #include <set>
 #include <vector>
@@ -47,8 +49,8 @@ void demoSet() {
 	//Delete from a set
 	//with iterator
 	it = set1.begin();
-	set1.erase(++++it); //erase second element
-						//set1.erase(it, set1.end()); //erase from second element through the end
+	set1.erase(++++it); //erase third element
+						//set1.erase(it, set1.end()); //erase from third element through the end
 	printSet(set1);
 
 	//remove specific elements
@@ -63,6 +65,7 @@ void demoSet() {
 
 	//remove specific elements with generic erase_if()
 	set1.insert(set4.begin(), set4.end());
+	//std::function< return_type (parameter_type) > identifier = [](parameter) -> return type {function declaration}
 	std::function<bool(std::set<int>::iterator)> lambda =
 		[](std::set<int>::iterator it)->bool {return *it % 15 == 0; };
 	set_erase_if(set1, set1.begin(), set1.end(), lambda);
@@ -100,7 +103,7 @@ void demoVector() {
 	printVector(vector4);
 
 	//vector always assigns the memory on heap with bigger size than its actual size
-	//when the size almost > capacity, it copies all element from old memory to new one
+	//when the size almost = capacity, it copies all element from old memory to new one
 	std::cout << "Capacity = " << vector4.capacity() << "\nSize = " << vector4.size() << '\n';
 	vector4.push_back(90);
 	vector4.push_back(100);
@@ -119,6 +122,32 @@ void demoVector() {
 	std::vector<Digimon> vector5(4);
 	printVector(vector5);
 
+	it = vector1.begin();
+	//insert '2' elements of '200' at the 4th position of vector
+	vector1.insert(it + 3, 2, 200);
+	//the iterator it could be invalid if reallocation occurs as
+	//all data has been moved to a new bigger chunk of memory
+	//while it is still pointing to that old memory
+	it = vector1.begin() + 3;
+	std::cout << *it << '\n';
+	//SAME SITUATION FOR DELETION IN VECTOR, ITERATOR WILL BE INVALID AFTERMATH
+	printVector(vector1);
+
+	//Erase-Remove Idiom
+	//erase any occurence of element
+	eraseElement(vector1, 100);
+	printVector(vector1);
+
+	//resizing the vector
+	vector1.resize(20);
+	vector2.resize(20);
+
+	//use generate() to insert random number into a vector with Functor (struct)
+	std::generate(vector1.begin(), vector1.end(), RandomGenerator(500));
+	//generate() with lambda function
+	std::generate(vector2.begin(), vector2.end(), []() {return rand() % 100; });
+	printVector(vector1);
+	printVector(vector2);
 }
 
 int main() {
