@@ -146,8 +146,11 @@ void demoVector() {
 	std::generate(vector1.begin(), vector1.end(), RandomGenerator(500));
 	//generate() with lambda function
 	std::generate(vector2.begin(), vector2.end(), []() {return rand() % 100; });
+	//assign(a,b) inserts a times of element b
+	vector3.assign(5, 6);
 	printVector(vector1);
 	printVector(vector2);
+	printVector(vector3);
 }
 
 int main() {
