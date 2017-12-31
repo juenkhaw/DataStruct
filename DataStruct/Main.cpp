@@ -6,9 +6,11 @@
 
 #include <set>
 #include <vector>
+#include <list>
 
 #include "MySet.h"
 #include "MyVector.h"
+#include "MyList.h"
 
 #include "Digimon.h"
 #include "DigimonComparator.h"
@@ -153,9 +155,43 @@ void demoVector() {
 	printVector(vector3);
 }
 
+void demoList() {
+	std::list<int> list1;
+	std::list<int>::const_iterator it;
+
+	//Initialization of list using initialization list
+	std::list<int> list2({ 1,2,3,4,5 });
+	//..using fill constructor: insert 5 '113's
+	std::list<int> list3(5, 113);
+	//..using vector and array
+
+	//insertion of element
+	list1.push_back(23);
+	list1.push_front(12);
+	it = list1.begin();
+	//current it->list[1]
+	list1.insert(++it, 20);
+	//current it->list[2], insert element at list[0..1] excluding list[2]
+	list1.insert(++it, list1.begin(), ++++list1.begin());
+	
+	printList(list1);
+
+	//accessing element through std::next()/prev() and std::advance()
+	it = list1.begin();
+	//move it iterator from list[0] to list[2]
+	std::advance(it, 2);
+	std::cout << "advance(it, 2) = " << *it << '\n';
+	//return an it with position list[3]
+	it = std::next(list1.begin(), 3);
+	std::cout << "next(begin, 3) = " << *it << '\n';
+	it = std::prev(list1.end(), 2);
+	std::cout << "prev(end, 2) = " << *it << '\n';
+}
+
 int main() {
 	//demoSet();
-	demoVector();
+	//demoVector();
+	demoList();
 
 	system("pause");
 }

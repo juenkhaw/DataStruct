@@ -120,6 +120,7 @@
   <ItemGroup>
     <ClInclude Include="Digimon.h" />
     <ClInclude Include="DigimonComparator.h" />
+    <ClInclude Include="MyList.h" />
     <ClInclude Include="MySet.h" />
     <ClInclude Include="MyVector.h" />
   </ItemGroup>
