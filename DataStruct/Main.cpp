@@ -15,6 +15,15 @@
 #include "Digimon.h"
 #include "DigimonComparator.h"
 
+int random[]{ 23, 12, 42, 9, 16, 13, 25, 37, 21 };
+
+Digimon digimon[]{
+	Digimon("Gabumon", "Howling Claw", 87),
+	Digimon("Renamon", "Koe No Katsu", 102),
+	Digimon("Wargreymon", "Gaia Force", 1024),
+	Digimon("Metalgarurumon", "Howling Abyss", 999)
+};
+
 void demoSet() {
 	//Initialization
 	int nums[]{ 30, 20, 50, 10, 40 };
@@ -74,12 +83,6 @@ void demoSet() {
 	printSet(set1);
 
 	//set with classes
-	Digimon digimon[]{
-		Digimon("Gabumon", "Howling Claw", 87),
-		Digimon("Renamon", "Koe No Katsu", 102),
-		Digimon("Wargreymon", "Gaia Force", 1024),
-		Digimon("Metalgarurumon", "Howling Abyss", 999)
-	};
 
 	std::set<Digimon> dSet1(digimon, digimon + sizeof(digimon) / sizeof(Digimon));
 	printSet(dSet1);
@@ -153,6 +156,12 @@ void demoVector() {
 	printVector(vector1);
 	printVector(vector2);
 	printVector(vector3);
+
+	//vector with classess
+	std::vector<Digimon> dVector1(digimon, digimon + sizeof(digimon) / sizeof(Digimon));
+	//dVector1.insert(dVector1.begin(), 50, digimon[1]);
+	printVector(dVector1);
+
 }
 
 void demoList() {
@@ -175,6 +184,9 @@ void demoList() {
 	list1.insert(++it, list1.begin(), ++++list1.begin());
 	
 	printList(list1);
+	printListLambda(list1);
+	printListRangeBaseForLoop(list1);
+	printListReverseIterator(list1);
 
 	//accessing element through std::next()/prev() and std::advance()
 	it = list1.begin();
@@ -186,6 +198,42 @@ void demoList() {
 	std::cout << "next(begin, 3) = " << *it << '\n';
 	it = std::prev(list1.end(), 2);
 	std::cout << "prev(end, 2) = " << *it << '\n';
+
+	//demonstrate generic containsList() to search for element
+	std::cout << "contains '23'? " << containsList(list1, 23) << '\n';
+	std::cout << "contains '19'? " << containsList(list1, 19) << '\n';
+
+	//erase() deletes [1..n] elements in given range
+	it = list1.begin();
+	//erase() returns the iterator pointing to the element next to the deleted one
+	it = list1.erase(it);
+	printList(list1);
+	//std::advance(it, 2);
+	list1.erase(++++it, list1.end());
+	printList(list1);
+
+	list1.insert(list1.end(), random, random + sizeof(random) / sizeof(random[0]));
+	//remove_if([function pointer](function object){lambda function})
+	list1.remove_if([](int item) {
+		return item > 30;
+	});
+	//while list::remove(x) remove any element with value x
+	printList(list1);
+
+	//sorting of list with default comparator '<'
+	list1.sort();
+	printList(list1);
+
+	//sorting of list with classes
+	std::list<Digimon> dList1(digimon, digimon + sizeof(digimon) / sizeof(Digimon));
+	//sort with lambda function
+	dList1.sort([](const Digimon& obj1, const Digimon& obj2) {
+		return obj1.name < obj2.name;
+	});
+	printList(dList1);
+	//sort with fucntion object comparator
+	dList1.sort(DigimonComparator(0));
+	printList(dList1);
 }
 
 int main() {

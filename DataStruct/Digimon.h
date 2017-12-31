@@ -6,6 +6,7 @@ public:
 	std::string signSkill;
 	int hp;
 
+	//default constructor is needed for initializing vector<Digimon>(size_t)
 	Digimon() {
 		name = signSkill = "MISSINGNO";
 		hp = -999;
@@ -13,6 +14,13 @@ public:
 
 	Digimon(std::string name, std::string signSkill, int hp) :
 		name(name), signSkill(signSkill), hp(hp) {}
+
+	//copy constructor is for vector to copying from memory to memory
+	Digimon(const Digimon& obj) {
+		name = obj.name;
+		signSkill = obj.signSkill;
+		hp = obj.hp;
+	}
 
 	bool operator< (const Digimon& d1) const;
 	friend std::ostream& operator<< (std::ostream& out, const Digimon& d1);
