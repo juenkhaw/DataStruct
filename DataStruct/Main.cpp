@@ -3,19 +3,27 @@
 #include <functional>
 #include <algorithm>
 #include <time.h>
+#include <iterator>
 
 #include <set>
 #include <vector>
 #include <list>
+#include <map>
+
+//actual map does NOT take only 2 template parameter
+template <typename T, typename S>
+using mymap = std::map<T, S>;
 
 #include "MySet.h"
 #include "MyVector.h"
 #include "MyList.h"
+#include "MyMap.h"
 
 #include "Digimon.h"
 #include "DigimonComparator.h"
 
 int random[]{ 23, 12, 42, 9, 16, 13, 25, 37, 21 };
+std::string randomStr[]{ "haku", "nope", "gabumon", "galileo", "kazeninaru", "okami", "yami", "amaterasu", "vadar" };
 
 Digimon digimon[]{
 	Digimon("Gabumon", "Howling Claw", 87),
@@ -236,10 +244,112 @@ void demoList() {
 	printList(dList1);
 }
 
+void demoMap() {
+	//initialization of map
+	std::map<int, std::string> map1;
+	std::map<int, std::string>::iterator it;
+
+	//insert key-pair with insert(std::map_pair())
+	for (int i = 0; i < (sizeof(random) / sizeof(random[0])); i++) {
+		map1.insert(std::make_pair(random[i], randomStr[i]));
+	}
+	printMap(map1);
+
+	//random access with key
+	std::cout << "MAP[21] = " << map1[21] << '\n';
+	//using [] to create new key with default value of value type
+	map1[20] = "HI IM NEW";
+
+	//alter value of a key
+	map1[21] = std::string("Darth Vadar");
+	std::cout << "new MAP[21] = " << map1[21] << '\n';
+	//repeated insertion will return a pair->second set to false and first points to the existing element
+	//map1.insert(std::make_pair(21, std::string("Darth Vadar"))).second = false
+
+	//demonstrate find()
+	std::cout << "find() MAP[21] exists? " << containsKeyMap(map1, 21) << '\n';
+	std::cout << "find() MAP[22] exists? " << containsKeyMap(map1, 22) << '\n';
+
+	//demonstrate count()
+	std::cout << "count() MAP[21] exists? " << containsKeyMap2(map1, 21) << '\n';
+	std::cout << "count() MAP[22] exists? " << containsKeyMap2(map1, 22) << '\n';
+
+	//map element can be erased by iterator and key
+	map1.erase(21);
+	it = map1.begin();
+	std::advance(it, 3);
+	//it should erase map[3]
+	map1.erase(it);
+	printMap(map1);
+	//delete map[0..2] where ease(x, y) erases map[x..y-1]
+	it = map1.begin();
+	auto it2 = ++++++map1.begin();
+	map1.erase(it, it2);
+	printMap(map1);
+	//delete specific element using generic eraseif()
+	std::cout << "ITEM DELETED with map_erase_if() = " <<
+	map_erase_if(map1, [](std::map<int, std::string>::const_iterator it) {
+		return it->second == "haku";
+	}) << "\n";
+	printMap(map1);
+
+	//external sorting criteria and comparator for map
+	std::map<std::string, int, ReverseOrderSTRKey> map2;
+	for (int i = 0; i < (sizeof(random) / sizeof(random[0])); i++) {
+		map2.insert(std::make_pair(randomStr[i], random[i]));
+	}
+	printMap(map2);
+
+	std::map<std::string, int, ReverseOrderSTRKey> map3(map2);
+
+	//comparison of 2 maps valid only when these 2 share the SAME sorting criteria
+	//eg. map1 == map2 is unresolved
+	//or comparing 2 maps with different types of key or value
+	std::cout << (map2 == map3?"SAME":"NOT SAME") << '\n';
+
+	//iterate a map to search by value
+	std::vector<std::string> result;
+	std::cout << "Search for value(21) : " <<
+		searchMapByValue(result, map3, 21) << "\nResult Vector: ";
+	printVector(result);
+	std::cout << "\n";
+
+	//copying element(key) from map to vector
+	result.clear(); //empty a vector
+	std::for_each(map3.begin(), map3.end(), 
+		//[&result] indicates that we are passing outside variabl as reference
+		//while [=] passing by value
+		[&result](std::pair<std::string, int> elem) {
+		result.push_back(elem.first);
+	});
+	printVector(result);
+	std::cout << "\n";
+
+	//another demo copying element(value) from map to vector
+	std::vector<int> result2;
+	//back_inserter(Container&) constructs an output iterator that isnerts new element
+	//at the end of the container
+	std::transform(map3.begin(), map3.end(), std::back_inserter(result2), 
+		[](const std::pair<std::string, int>& elem) {
+		return elem.second;
+	});
+
+	//another fancy way to print vector
+	std::copy(result2.begin(), result2.end(),
+		std::ostream_iterator<int>(std::cout, ", "));
+	std::cout << "\n";
+
+	//yet another way to transform through function pointer
+	std::transform(map3.begin(), map3.end(), 
+		std::back_inserter(result2), &getSecond<std::string, int>);
+	printVector(result2);
+}
+
 int main() {
 	//demoSet();
 	//demoVector();
-	demoList();
+	//demoList();
+	demoMap();
 
 	system("pause");
 }

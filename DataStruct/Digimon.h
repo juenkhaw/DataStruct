@@ -26,6 +26,7 @@ public:
 	friend std::ostream& operator<< (std::ostream& out, const Digimon& d1);
 };
 
+//overloaded operator is required if comparation of object
 bool Digimon::operator< (const Digimon& d1) const {
 	return this->name < d1.name;
 }
