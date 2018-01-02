@@ -122,6 +122,7 @@
     <ClInclude Include="DigimonComparator.h" />
     <ClInclude Include="MyList.h" />
     <ClInclude Include="MyMap.h" />
+    <ClInclude Include="MyMultimap.h" />
     <ClInclude Include="MySet.h" />
     <ClInclude Include="MyVector.h" />
   </ItemGroup>

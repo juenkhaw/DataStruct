@@ -18,6 +18,7 @@ using mymap = std::map<T, S>;
 #include "MyVector.h"
 #include "MyList.h"
 #include "MyMap.h"
+#include "MyMultimap.h"
 
 #include "Digimon.h"
 #include "DigimonComparator.h"
@@ -345,11 +346,29 @@ void demoMap() {
 	printVector(result2);
 }
 
+void demoMultimap() {
+	//initialization of multimap
+	std::multimap<char, int> mmap1;
+	static int count = 30;
+	for (char i = 'a'; i <= ('a' + 10); i++) {
+		do {
+			mmap1.insert(std::make_pair(i, count));
+			count--;
+		} while (count % 3 != 0);
+	}
+	printMultimap(mmap1);
+
+	//demo searching for all entry with key given
+	searchMultimapWithKey(mmap1, 'd');
+	searchMultimapWithKey(mmap1, 'o');
+}
+
 int main() {
 	//demoSet();
 	//demoVector();
 	//demoList();
-	demoMap();
+	//demoMap();
+	//demoMultimap();
 
 	system("pause");
 }
